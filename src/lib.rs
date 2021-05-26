@@ -1,8 +1,8 @@
-pub mod lexer;
+pub mod parser;
 
 #[derive(Default)]
 pub struct REPL {
-    lexer: lexer::Lexer,
+    lexer: parser::Lexer,
 }
 
 impl REPL {
