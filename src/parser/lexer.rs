@@ -1,66 +1,88 @@
-use std::vec::Vec;
-use std::slice::Iter;
+use std::{collections::VecDeque, str::Chars};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Operator {
-    Addition
+    Addition,
 }
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Token {
     Identifier(String),
     Number(i32),
-    Op(Operator),
-    EOF
+    Operator(Operator),
+    EOF,
 }
 
-#[derive(Default)]
-pub struct Lexer {
-    tokens: Vec<Token>,
-}
-
-impl Lexer {
-    pub fn load_program(&mut self, program: &str) -> Result<(), String> {
-        // TODO: Return error when error happens
-        // TODO: Load tokens
-        for word in program.split_whitespace() {
-            if word.chars().all(char::is_numeric) {
-                self.tokens.push(Token::Number(word.parse::<i32>().unwrap()));
-                continue;
-            }
-
-            if word == "+" {
-                self.tokens.push(Token::Op(Operator::Addition));
-                continue;
-            }
-
-            // Not an operator or a number, treat it as an identifier
-            self.tokens.push(Token::Identifier(word.to_string()));
+fn get_word<F>(chars: &mut Chars, filter: F) -> Option<String>
+where
+    F: Fn(char) -> bool,
+{
+    let mut current_token = String::from("");
+    while let Some(next_char) = chars.next() {
+        if next_char.is_whitespace() {
+            break;
+        } else if filter(next_char) {
+            current_token.push(next_char);
+        } else {
+            return None;
         }
+    }
+    return Some(current_token);
+}
 
-        self.tokens.push(Token::EOF);
-        Ok(())
+/*
+TODO: Return error when error happens
+TODO: Load tokens one by one, read char by char, don't split_whitespace the complete
+thing
+*/
+pub fn tokenize(program: String) -> Result<VecDeque<Token>, &'static str> {
+    let mut tokens: VecDeque<Token> = VecDeque::new();
+
+    let mut chars = program.chars();
+    while let Some(char) = chars.next() {
+        if char.is_whitespace() {
+            continue;
+        } else if char == '+' {
+            tokens.push_back(Token::Operator(Operator::Addition));
+        } else if char.is_numeric() {
+            // This is a number
+            match get_word(&mut chars, char::is_numeric) {
+                Some(mut word) => {
+                    word.insert(0, char);
+                    tokens.push_back(Token::Number(word.parse::<i32>().unwrap()));
+                }
+                None => return Err("Failed to parse number"),
+            };
+        } else if char.is_alphabetic() {
+            // This is an identifier
+            match get_word(&mut chars, char::is_alphanumeric) {
+                Some(mut word) => {
+                    word.insert(0, char);
+                    tokens.push_back(Token::Identifier(word));
+                }
+                None => return Err("Failed to parse identifier"),
+            };
+        }
     }
 
-    pub fn tokens(&self) -> Iter<Token> {
-        self.tokens.iter()
-    }
+    tokens.push_back(Token::EOF);
+    Ok(tokens)
 }
 
 #[cfg(test)]
 mod test {
-    use super::{ Lexer, Token, Operator };
+    use super::{tokenize, Operator, Token};
 
     #[test]
     fn test_numeric_expression() {
-        let mut lexer: Lexer = Default::default();
-        lexer.load_program("2 + 4").expect("Failed to parse string");
-        
-        let mut iter = lexer.tokens();
-        assert_eq!(Some(&Token::Number(2)), iter.next());
-        assert_eq!(Some(&Token::Op(Operator::Addition)), iter.next());
-        assert_eq!(Some(&Token::Number(4)), iter.next());
-        assert_eq!(Some(&Token::EOF), iter.next());
+        match tokenize("2 + 4".to_string()) {
+            Err(error) => eprintln!("ERROR: Failed to parse 2 + 4\nDETAILS: {}", error),
+            Ok(tokens) => {
+                assert_eq!(Some(&Token::Number(2)), tokens.get(0));
+                assert_eq!(Some(&Token::Operator(Operator::Addition)), tokens.get(1));
+                assert_eq!(Some(&Token::Number(4)), tokens.get(2));
+                assert_eq!(Some(&Token::EOF), tokens.get(3));
+            }
+        }
     }
-} 
-
+}

@@ -1,8 +1,24 @@
 use std::io::{self, Write};
 
 #[inline]
-fn clean(input: String) -> String {
+fn clean(input: &String) -> String {
     input.trim().to_string()
+}
+
+fn process_input(input: &String) {
+    let cleaned = clean(input);
+
+    // Close the program if exit() is entered, compile otherwise
+    if cleaned.eq("exit()") {
+        panic!("Exiting the program...");
+    } else {
+        match pillow::compile(cleaned) {
+            Err(error) => {
+                eprintln!("ERROR: Failed to compile input\nDETAILS: {}", error)
+            }
+            _ => (),
+        }
+    }
 }
 
 fn main() {
@@ -22,16 +38,7 @@ fn main() {
         // Read the next line and take user input
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
-            Ok(_) => {
-                input = clean(input);
-
-                // Close the program if exit() is entered, compile otherwise
-                if input.eq("exit()") {
-                    break;
-                } else {
-                    pillow::compile(input)
-                }
-            }
+            Ok(_) => process_input(&input),
             Err(error) => eprintln!("ERROR: Failed to read input\nDETAILS: {}", error),
         }
     }

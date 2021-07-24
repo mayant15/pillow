@@ -1,4 +1,11 @@
-# Pillow Lang
+# [WIP] Pillow
 
-Pillow is a project to learn about compilers. It is a simple language and a compiler frontend that generates LLVM IR. Based on the [My First Language Frontend](https://www.llvm.org/docs/tutorial/MyFirstLanguageFrontend/index.html) tutorial by LLVM.
+Pillow is a project to learn about compilers. It is a simple language and a compiler frontend that generates LLVM IR. Still very much a work in progress.
 
+## Ideas
+
+- [inkwell](https://thedan64.github.io/inkwell/inkwell/index.html) for LLVM bindings
+
+## References
+
+- [My First Language Frontend](https://www.llvm.org/docs/tutorial/MyFirstLanguageFrontend/index.html) tutorial by LLVM
