@@ -1,8 +1,6 @@
-use std::{collections::VecDeque, str::Chars};
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum Operator {
-    Addition,
+    Add,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -10,79 +8,146 @@ pub enum Token {
     Identifier(String),
     Number(i32),
     Operator(Operator),
-    EOF,
 }
 
-fn get_word<F>(chars: &mut Chars, filter: F) -> Option<String>
-where
-    F: Fn(char) -> bool,
-{
-    let mut current_token = String::from("");
-    while let Some(next_char) = chars.next() {
-        if next_char.is_whitespace() {
-            break;
-        } else if filter(next_char) {
-            current_token.push(next_char);
-        } else {
-            return None;
-        }
-    }
-    return Some(current_token);
+// NOTE: This is pretty impure
+pub struct Lexer<'a> {
+    program: &'a str,
 }
 
-/*
-TODO: Return error when error happens
-TODO: Load tokens one by one, read char by char, don't split_whitespace the complete
-thing
-*/
-pub fn tokenize(program: String) -> Result<VecDeque<Token>, &'static str> {
-    let mut tokens: VecDeque<Token> = VecDeque::new();
-
-    let mut chars = program.chars();
-    while let Some(char) = chars.next() {
-        if char.is_whitespace() {
-            continue;
-        } else if char == '+' {
-            tokens.push_back(Token::Operator(Operator::Addition));
-        } else if char.is_numeric() {
-            // This is a number
-            match get_word(&mut chars, char::is_numeric) {
-                Some(mut word) => {
-                    word.insert(0, char);
-                    tokens.push_back(Token::Number(word.parse::<i32>().unwrap()));
-                }
-                None => return Err("Failed to parse number"),
-            };
-        } else if char.is_alphabetic() {
-            // This is an identifier
-            match get_word(&mut chars, char::is_alphanumeric) {
-                Some(mut word) => {
-                    word.insert(0, char);
-                    tokens.push_back(Token::Identifier(word));
-                }
-                None => return Err("Failed to parse identifier"),
-            };
+impl<'a> Lexer<'a> {
+    pub fn new(program: &str) -> Lexer {
+        Lexer {
+            program: program.trim(),
         }
     }
 
-    tokens.push_back(Token::EOF);
-    Ok(tokens)
+    pub fn get_next_token(&mut self) -> Option<Token> {
+        // Consume whitespace, if any
+        match tokenizer::whitespace(self.program) {
+            Err(_) => (),
+            Ok((i, _o)) => {
+                self.program = i;
+            }
+        };
+
+        if let Some(char) = self.program.chars().next() {
+            if Lexer::is_identifier(char) {
+                return match tokenizer::identifier(self.program) {
+                    Err(_) => None,
+                    Ok((i, o)) => {
+                        self.program = i;
+                        Some(Token::Identifier(o.to_string()))
+                    }
+                };
+            } else if char.is_numeric() {
+                return match tokenizer::decimal_literal(self.program) {
+                    Err(_) => None,
+                    Ok((i, o)) => {
+                        self.program = i;
+                        Some(Token::Number(o.to_string().parse::<i32>().unwrap()))
+                    }
+                };
+            } else if Lexer::is_operator(char) {
+                return match tokenizer::operator(self.program) {
+                    Err(_) => None,
+                    Ok((i, o)) => {
+                        self.program = i;
+                        Some(Token::Operator(Lexer::operator_from_str(o)))
+                    }
+                };
+            }
+        }
+
+        return None;
+    }
+
+    fn is_operator(ch: char) -> bool {
+        ch == '+' || ch == '-'
+    }
+
+    fn is_identifier(ch: char) -> bool {
+        // NOTE: An identifier can start with anything that's not a number
+        ch.is_alphabetic() || ch == '_'
+    }
+
+    fn operator_from_str(s: &str) -> Operator {
+        match s {
+            "+" => Operator::Add,
+            _ => Operator::Add,
+        }
+    }
+}
+
+mod tokenizer {
+
+    use nom::{
+        branch::alt,
+        bytes::complete::tag,
+        character::complete::{alpha1, alphanumeric1, char, multispace0, one_of},
+        combinator::recognize,
+        multi::{many0, many1},
+        sequence::{pair, terminated},
+        IResult,
+    };
+
+    pub fn decimal_literal(input: &str) -> IResult<&str, &str> {
+        recognize(many1(terminated(one_of("0123456789"), many0(char('_')))))(input)
+    }
+
+    pub fn identifier(input: &str) -> IResult<&str, &str> {
+        recognize(pair(
+            alt((alpha1, tag("_"))),
+            many0(alt((alphanumeric1, tag("_")))),
+        ))(input)
+    }
+
+    pub fn operator(input: &str) -> IResult<&str, &str> {
+        recognize(one_of("+-/*="))(input)
+    }
+
+    pub fn whitespace(input: &str) -> IResult<&str, &str> {
+        multispace0(input)
+    }
 }
 
 #[cfg(test)]
 mod test {
-    use super::{tokenize, Operator, Token};
+    use super::tokenizer;
+    use super::{Lexer, Operator, Token};
+
+    #[test]
+    fn test_parse_decimal_literal() {
+        assert_eq!(tokenizer::decimal_literal("2 + 3"), Ok((" + 3", "2")));
+        assert_eq!(tokenizer::decimal_literal("2+ 3"), Ok(("+ 3", "2")));
+        assert_eq!(tokenizer::decimal_literal("2 +3"), Ok((" +3", "2")));
+        assert_eq!(tokenizer::decimal_literal("2+3"), Ok(("+3", "2")));
+        assert_eq!(tokenizer::decimal_literal("234 + 3"), Ok((" + 3", "234")));
+
+        // TODO: This would have nested errors? I don't want to bother with that
+        match tokenizer::decimal_literal("s+3") {
+            Err(_) => assert_eq!(1, 1), // This branch implies we've passed, this should indeed be an error
+            Ok(_) => assert_eq!(1, 0),  // This branch implies we've failed, this should not be Ok
+        }
+    }
+
+    #[test]
+    fn test_parse_identifier() {
+        assert_eq!(tokenizer::identifier("x + 2"), Ok((" + 2", "x")));
+        assert_eq!(tokenizer::identifier("x   +2"), Ok(("   +2", "x")));
+        assert_eq!(tokenizer::identifier("_d+2"), Ok(("+2", "_d")));
+
+        match tokenizer::identifier("$x - 2") {
+            Err(_) => assert_eq!(1, 1), // This branch implies we've passed, this should indeed be an error
+            Ok(_) => assert_eq!(1, 0),  // This branch implies we've failed, this should not be Ok
+        }
+    }
 
     #[test]
     fn test_numeric_expression() {
-        match tokenize("2 + 4".to_string()) {
-            Err(error) => eprintln!("ERROR: Failed to parse 2 + 4\nDETAILS: {}", error),
-            Ok(tokens) => {
-                assert_eq!(Some(&Token::Number(2)), tokens.get(0));
-                assert_eq!(Some(&Token::Operator(Operator::Addition)), tokens.get(1));
-                assert_eq!(Some(&Token::Number(4)), tokens.get(2));
-                assert_eq!(Some(&Token::EOF), tokens.get(3));
-            }
-        }
+        let mut lexer = Lexer::new("2 + 4");
+        assert_eq!(Some(Token::Number(2)), lexer.get_next_token());
+        assert_eq!(Some(Token::Operator(Operator::Add)), lexer.get_next_token());
+        assert_eq!(Some(Token::Number(4)), lexer.get_next_token());
     }
 }
