@@ -1,18 +1,24 @@
-pub mod repl {
-    pub fn eval(program: String) -> i32 {
-        0
+use std::println;
+
+mod codegen;
+mod optimizer;
+mod parser;
+
+mod tree;
+
+// NOTE: compile takes ownership of the program string.
+// The Lexer looks at views on this string only
+pub fn compile(program: String) -> Result<(), &'static str> {
+    let mut lexer = parser::Lexer::new(&program);
+
+    let mut tokens: Vec<parser::Token> = Vec::new();
+    while let Some(token) = lexer.get_next_token() {
+        tokens.push(token)
     }
+
+    let ast = parser::parse(tokens);
+    let new_ast = optimizer::optimize(ast);
+    let ir = codegen::generate(new_ast);
+    println!("{:?}", ir);
+    Ok(())
 }
-
-#[cfg(test)]
-mod test {
-    use super::repl;
-
-    #[test]
-    fn test_add() {
-        let program = "2 + 2";
-        let result = repl::eval(program.to_string());
-        assert_eq!(result, 4);
-    }
-}
-
