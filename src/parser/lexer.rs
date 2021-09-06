@@ -40,6 +40,14 @@ impl<'a> Lexer<'a> {
                         Some(Token::Identifier(o.to_string()))
                     }
                 };
+            } else if Lexer::is_parenthesis(char) {
+                return match tokenizer::parenthesis(self.program) {
+                    Err(_) => None,
+                    Ok((i, o)) => {
+                        self.program = i;
+                        Some(Token::Identifier(o.to_string()))
+                    }
+                };
             } else if char.is_numeric() {
                 return match tokenizer::decimal_literal(self.program) {
                     Err(_) => None,
@@ -71,6 +79,10 @@ impl<'a> Lexer<'a> {
         ch.is_alphabetic() || ch == '_'
     }
 
+    fn is_parenthesis(ch: char) -> bool {
+        ch == ')' || ch == '('
+    }
+
     fn operator_from_str(s: &str) -> Operator {
         match s {
             "+" => Operator::Add,
@@ -100,6 +112,10 @@ mod tokenizer {
             alt((alpha1, tag("_"))),
             many0(alt((alphanumeric1, tag("_")))),
         ))(input)
+    }
+
+    pub fn parenthesis(input: &str) -> IResult<&str, &str> {
+        recognize(one_of("()"))(input)
     }
 
     pub fn operator(input: &str) -> IResult<&str, &str> {
