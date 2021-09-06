@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, staging, trying ]
   pull_request:
     branches: [ main ]
 
@@ -20,5 +20,7 @@ jobs:
         toolchain: nightly
         override: true
         components: rust-src, llvm-tools-preview
-    - name: Build and test
+    - name: Build
+      run: cargo build --verbose
+    - name: Test
       run: cargo test --verbose
