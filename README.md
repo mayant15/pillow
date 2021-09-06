@@ -1,4 +1,5 @@
-# [WIP] Pillow
+# Pillow
+[![test](https://github.com/mayant15/pillow/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/mayant15/pillow/actions/workflows/test.yml)
 
 Pillow is a project to learn about compilers. It is a simple language and a compiler frontend that generates LLVM IR. Still very much a work in progress.
 
