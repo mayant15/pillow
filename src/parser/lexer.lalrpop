@@ -1,0 +1,26 @@
+use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+grammar;
+
+// Grammar:
+// <Goal> -> <Expr>
+// <Expr> -> <Expr> + <Factor> | <Expr> - <Factor> | <Factor>
+// <Factor> -> <Factor> * <Term> | <Factor> / <Term> | <Term>
+// <Term> -> ( <Expr> ) | <Num>
+// <Num> -> [0-9]+
+
+pub Expr: AST = {
+    <lhs:Expr> "+" <rhs:Factor> =>? parse_binary_expr(lhs, EBinaryOp::Add, rhs),
+    <lhs:Expr> "-" <rhs:Factor> =>? parse_binary_expr(lhs, EBinaryOp::Sub, rhs),
+    Factor,
+};
+
+Factor: AST = {
+    <lhs:Factor> "*" <rhs:Term> =>? parse_binary_expr(lhs, EBinaryOp::Mul, rhs),
+    <lhs:Factor> "/" <rhs:Term> =>? parse_binary_expr(lhs, EBinaryOp::Div, rhs),
+    Term,
+};
+
+Term = { Num, "(" <Expr> ")" };
+
+Num: AST = <s: r"[0-9]+"> =>? parse_num_expr(s); 
+

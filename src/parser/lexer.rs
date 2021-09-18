@@ -1,169 +1,680 @@
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum Operator {
-    Add,
-}
+// auto-generated: "lalrpop 0.19.6"
+// sha3: 7057cb666e9baee68e8ebcd2f32a6fe94f2a2896fc62bbd45d882ba4badaf
+use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+#[allow(unused_extern_crates)]
+extern crate lalrpop_util as __lalrpop_util;
+#[allow(unused_imports)]
+use self::__lalrpop_util::state_machine as __state_machine;
+extern crate core;
+extern crate alloc;
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum Token {
-    Identifier(String),
-    Number(i32),
-    Operator(Operator),
-}
+#[cfg_attr(rustfmt, rustfmt_skip)]
+mod __parse__Expr {
+    #![allow(non_snake_case, non_camel_case_types, unused_mut, unused_variables, unused_imports, unused_parens)]
 
-// NOTE: This is pretty impure
-pub struct Lexer<'a> {
-    program: &'a str,
-}
-
-impl<'a> Lexer<'a> {
-    pub fn new(program: &str) -> Lexer {
-        Lexer {
-            program: program.trim(),
+    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+    #[allow(unused_extern_crates)]
+    extern crate lalrpop_util as __lalrpop_util;
+    #[allow(unused_imports)]
+    use self::__lalrpop_util::state_machine as __state_machine;
+    extern crate core;
+    extern crate alloc;
+    use self::__lalrpop_util::lexer::Token;
+    #[allow(dead_code)]
+    pub(crate) enum __Symbol<'input>
+     {
+        Variant0(&'input str),
+        Variant1(AST),
+    }
+    const __ACTION: &[i8] = &[
+        // State 0
+        2, 0, 0, 0, 0, 0, 11,
+        // State 1
+        2, 0, 0, 0, 0, 0, 11,
+        // State 2
+        2, 0, 0, 0, 0, 0, 11,
+        // State 3
+        2, 0, 0, 0, 0, 0, 11,
+        // State 4
+        2, 0, 0, 0, 0, 0, 11,
+        // State 5
+        2, 0, 0, 0, 0, 0, 11,
+        // State 6
+        0, 0, 0, 3, 4, 0, 0,
+        // State 7
+        0, -3, 5, -3, -3, 6, 0,
+        // State 8
+        0, -8, -8, -8, -8, -8, 0,
+        // State 9
+        0, -6, -6, -6, -6, -6, 0,
+        // State 10
+        0, -7, -7, -7, -7, -7, 0,
+        // State 11
+        0, 17, 0, 3, 4, 0, 0,
+        // State 12
+        0, -1, 5, -1, -1, 6, 0,
+        // State 13
+        0, -2, 5, -2, -2, 6, 0,
+        // State 14
+        0, -4, -4, -4, -4, -4, 0,
+        // State 15
+        0, -5, -5, -5, -5, -5, 0,
+        // State 16
+        0, -9, -9, -9, -9, -9, 0,
+    ];
+    fn __action(state: i8, integer: usize) -> i8 {
+        __ACTION[(state as usize) * 7 + integer]
+    }
+    const __EOF_ACTION: &[i8] = &[
+        // State 0
+        0,
+        // State 1
+        0,
+        // State 2
+        0,
+        // State 3
+        0,
+        // State 4
+        0,
+        // State 5
+        0,
+        // State 6
+        -10,
+        // State 7
+        -3,
+        // State 8
+        -8,
+        // State 9
+        -6,
+        // State 10
+        -7,
+        // State 11
+        0,
+        // State 12
+        -1,
+        // State 13
+        -2,
+        // State 14
+        -4,
+        // State 15
+        -5,
+        // State 16
+        -9,
+    ];
+    fn __goto(state: i8, nt: usize) -> i8 {
+        match nt {
+            0 => match state {
+                1 => 11,
+                _ => 6,
+            },
+            1 => match state {
+                2 => 12,
+                3 => 13,
+                _ => 7,
+            },
+            2 => 8,
+            3 => match state {
+                4 => 14,
+                5 => 15,
+                _ => 9,
+            },
+            _ => 0,
         }
     }
-
-    pub fn get_next_token(&mut self) -> Option<Token> {
-        // Consume whitespace, if any
-        match tokenizer::whitespace(self.program) {
-            Err(_) => (),
-            Ok((i, _o)) => {
-                self.program = i;
+    fn __expected_tokens(__state: i8) -> alloc::vec::Vec<alloc::string::String> {
+        const __TERMINAL: &[&str] = &[
+            r###""(""###,
+            r###"")""###,
+            r###""*""###,
+            r###""+""###,
+            r###""-""###,
+            r###""/""###,
+            r###"r#"[0-9]+"#"###,
+        ];
+        __TERMINAL.iter().enumerate().filter_map(|(index, terminal)| {
+            let next_state = __action(__state, index);
+            if next_state == 0 {
+                None
+            } else {
+                Some(alloc::string::ToString::to_string(terminal))
             }
+        }).collect()
+    }
+    pub(crate) struct __StateMachine<'input>
+    where 
+    {
+        input: &'input str,
+        __phantom: core::marker::PhantomData<(&'input ())>,
+    }
+    impl<'input> __state_machine::ParserDefinition for __StateMachine<'input>
+    where 
+    {
+        type Location = usize;
+        type Error = &'static str;
+        type Token = Token<'input>;
+        type TokenIndex = usize;
+        type Symbol = __Symbol<'input>;
+        type Success = AST;
+        type StateIndex = i8;
+        type Action = i8;
+        type ReduceIndex = i8;
+        type NonterminalIndex = usize;
+
+        #[inline]
+        fn start_location(&self) -> Self::Location {
+              Default::default()
+        }
+
+        #[inline]
+        fn start_state(&self) -> Self::StateIndex {
+              0
+        }
+
+        #[inline]
+        fn token_to_index(&self, token: &Self::Token) -> Option<usize> {
+            __token_to_integer(token, core::marker::PhantomData::<(&())>)
+        }
+
+        #[inline]
+        fn action(&self, state: i8, integer: usize) -> i8 {
+            __action(state, integer)
+        }
+
+        #[inline]
+        fn error_action(&self, state: i8) -> i8 {
+            __action(state, 7 - 1)
+        }
+
+        #[inline]
+        fn eof_action(&self, state: i8) -> i8 {
+            __EOF_ACTION[state as usize]
+        }
+
+        #[inline]
+        fn goto(&self, state: i8, nt: usize) -> i8 {
+            __goto(state, nt)
+        }
+
+        fn token_to_symbol(&self, token_index: usize, token: Self::Token) -> Self::Symbol {
+            __token_to_symbol(token_index, token, core::marker::PhantomData::<(&())>)
+        }
+
+        fn expected_tokens(&self, state: i8) -> alloc::vec::Vec<alloc::string::String> {
+            __expected_tokens(state)
+        }
+
+        #[inline]
+        fn uses_error_recovery(&self) -> bool {
+            false
+        }
+
+        #[inline]
+        fn error_recovery_symbol(
+            &self,
+            recovery: __state_machine::ErrorRecovery<Self>,
+        ) -> Self::Symbol {
+            panic!("error recovery not enabled for this grammar")
+        }
+
+        fn reduce(
+            &mut self,
+            action: i8,
+            start_location: Option<&Self::Location>,
+            states: &mut alloc::vec::Vec<i8>,
+            symbols: &mut alloc::vec::Vec<__state_machine::SymbolTriple<Self>>,
+        ) -> Option<__state_machine::ParseResult<Self>> {
+            __reduce(
+                self.input,
+                action,
+                start_location,
+                states,
+                symbols,
+                core::marker::PhantomData::<(&())>,
+            )
+        }
+
+        fn simulate_reduce(&self, action: i8) -> __state_machine::SimulatedReduce<Self> {
+            panic!("error recovery not enabled for this grammar")
+        }
+    }
+    fn __token_to_integer<
+        'input,
+    >(
+        __token: &Token<'input>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> Option<usize>
+    {
+        match *__token {
+            Token(1, _) if true => Some(0),
+            Token(2, _) if true => Some(1),
+            Token(3, _) if true => Some(2),
+            Token(4, _) if true => Some(3),
+            Token(5, _) if true => Some(4),
+            Token(6, _) if true => Some(5),
+            Token(0, _) if true => Some(6),
+            _ => None,
+        }
+    }
+    fn __token_to_symbol<
+        'input,
+    >(
+        __token_index: usize,
+        __token: Token<'input>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> __Symbol<'input>
+    {
+        match __token_index {
+            0 | 1 | 2 | 3 | 4 | 5 | 6 => match __token {
+                Token(1, __tok0) | Token(2, __tok0) | Token(3, __tok0) | Token(4, __tok0) | Token(5, __tok0) | Token(6, __tok0) | Token(0, __tok0) if true => __Symbol::Variant0(__tok0),
+                _ => unreachable!(),
+            },
+            _ => unreachable!(),
+        }
+    }
+    pub struct ExprParser {
+        builder: __lalrpop_util::lexer::MatcherBuilder,
+        _priv: (),
+    }
+
+    impl ExprParser {
+        pub fn new() -> ExprParser {
+            let __builder = super::__intern_token::new_builder();
+            ExprParser {
+                builder: __builder,
+                _priv: (),
+            }
+        }
+
+        #[allow(dead_code)]
+        pub fn parse<
+            'input,
+        >(
+            &self,
+            input: &'input str,
+        ) -> Result<AST, __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>
+        {
+            let mut __tokens = self.builder.matcher(input);
+            __state_machine::Parser::drive(
+                __StateMachine {
+                    input,
+                    __phantom: core::marker::PhantomData::<(&())>,
+                },
+                __tokens,
+            )
+        }
+    }
+    pub(crate) fn __reduce<
+        'input,
+    >(
+        input: &'input str,
+        __action: i8,
+        __lookahead_start: Option<&usize>,
+        __states: &mut alloc::vec::Vec<i8>,
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> Option<Result<AST,__lalrpop_util::ParseError<usize, Token<'input>, &'static str>>>
+    {
+        let (__pop_states, __nonterminal) = match __action {
+            0 => {
+                // Expr = Expr, "+", Factor => ActionFn(1);
+                assert!(__symbols.len() >= 3);
+                let __sym2 = __pop_Variant1(__symbols);
+                let __sym1 = __pop_Variant0(__symbols);
+                let __sym0 = __pop_Variant1(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym2.2.clone();
+                let __nt = match super::__action1::<>(input, __sym0, __sym1, __sym2) {
+                    Ok(v) => v,
+                    Err(e) => return Some(Err(e)),
+                };
+                __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+                (3, 0)
+            }
+            1 => {
+                // Expr = Expr, "-", Factor => ActionFn(2);
+                assert!(__symbols.len() >= 3);
+                let __sym2 = __pop_Variant1(__symbols);
+                let __sym1 = __pop_Variant0(__symbols);
+                let __sym0 = __pop_Variant1(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym2.2.clone();
+                let __nt = match super::__action2::<>(input, __sym0, __sym1, __sym2) {
+                    Ok(v) => v,
+                    Err(e) => return Some(Err(e)),
+                };
+                __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+                (3, 0)
+            }
+            2 => {
+                __reduce2(input, __lookahead_start, __symbols, core::marker::PhantomData::<(&())>)
+            }
+            3 => {
+                // Factor = Factor, "*", Term => ActionFn(4);
+                assert!(__symbols.len() >= 3);
+                let __sym2 = __pop_Variant1(__symbols);
+                let __sym1 = __pop_Variant0(__symbols);
+                let __sym0 = __pop_Variant1(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym2.2.clone();
+                let __nt = match super::__action4::<>(input, __sym0, __sym1, __sym2) {
+                    Ok(v) => v,
+                    Err(e) => return Some(Err(e)),
+                };
+                __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+                (3, 1)
+            }
+            4 => {
+                // Factor = Factor, "/", Term => ActionFn(5);
+                assert!(__symbols.len() >= 3);
+                let __sym2 = __pop_Variant1(__symbols);
+                let __sym1 = __pop_Variant0(__symbols);
+                let __sym0 = __pop_Variant1(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym2.2.clone();
+                let __nt = match super::__action5::<>(input, __sym0, __sym1, __sym2) {
+                    Ok(v) => v,
+                    Err(e) => return Some(Err(e)),
+                };
+                __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+                (3, 1)
+            }
+            5 => {
+                __reduce5(input, __lookahead_start, __symbols, core::marker::PhantomData::<(&())>)
+            }
+            6 => {
+                // Num = r#"[0-9]+"# => ActionFn(9);
+                let __sym0 = __pop_Variant0(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym0.2.clone();
+                let __nt = match super::__action9::<>(input, __sym0) {
+                    Ok(v) => v,
+                    Err(e) => return Some(Err(e)),
+                };
+                __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+                (1, 2)
+            }
+            7 => {
+                __reduce7(input, __lookahead_start, __symbols, core::marker::PhantomData::<(&())>)
+            }
+            8 => {
+                __reduce8(input, __lookahead_start, __symbols, core::marker::PhantomData::<(&())>)
+            }
+            9 => {
+                // __Expr = Expr => ActionFn(0);
+                let __sym0 = __pop_Variant1(__symbols);
+                let __start = __sym0.0.clone();
+                let __end = __sym0.2.clone();
+                let __nt = super::__action0::<>(input, __sym0);
+                return Some(Ok(__nt));
+            }
+            _ => panic!("invalid action code {}", __action)
         };
-
-        if let Some(char) = self.program.chars().next() {
-            if Lexer::is_identifier(char) {
-                return match tokenizer::identifier(self.program) {
-                    Err(_) => None,
-                    Ok((i, o)) => {
-                        self.program = i;
-                        Some(Token::Identifier(o.to_string()))
-                    }
-                };
-            } else if Lexer::is_parenthesis(char) {
-                return match tokenizer::parenthesis(self.program) {
-                    Err(_) => None,
-                    Ok((i, o)) => {
-                        self.program = i;
-                        Some(Token::Identifier(o.to_string()))
-                    }
-                };
-            } else if char.is_numeric() {
-                return match tokenizer::decimal_literal(self.program) {
-                    Err(_) => None,
-                    Ok((i, o)) => {
-                        self.program = i;
-                        Some(Token::Number(o.to_string().parse::<i32>().unwrap()))
-                    }
-                };
-            } else if Lexer::is_operator(char) {
-                return match tokenizer::operator(self.program) {
-                    Err(_) => None,
-                    Ok((i, o)) => {
-                        self.program = i;
-                        Some(Token::Operator(Lexer::operator_from_str(o)))
-                    }
-                };
-            }
+        let __states_len = __states.len();
+        __states.truncate(__states_len - __pop_states);
+        let __state = *__states.last().unwrap();
+        let __next_state = __goto(__state, __nonterminal);
+        __states.push(__next_state);
+        None
+    }
+    #[inline(never)]
+    fn __symbol_type_mismatch() -> ! {
+        panic!("symbol type mismatch")
+    }
+    fn __pop_Variant1<
+      'input,
+    >(
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>
+    ) -> (usize, AST, usize)
+     {
+        match __symbols.pop() {
+            Some((__l, __Symbol::Variant1(__v), __r)) => (__l, __v, __r),
+            _ => __symbol_type_mismatch()
         }
-
-        return None;
     }
-
-    fn is_operator(ch: char) -> bool {
-        ch == '+' || ch == '-'
-    }
-
-    fn is_identifier(ch: char) -> bool {
-        // NOTE: An identifier can start with anything that's not a number
-        ch.is_alphabetic() || ch == '_'
-    }
-
-    fn is_parenthesis(ch: char) -> bool {
-        ch == ')' || ch == '('
-    }
-
-    fn operator_from_str(s: &str) -> Operator {
-        match s {
-            "+" => Operator::Add,
-            _ => Operator::Add,
+    fn __pop_Variant0<
+      'input,
+    >(
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>
+    ) -> (usize, &'input str, usize)
+     {
+        match __symbols.pop() {
+            Some((__l, __Symbol::Variant0(__v), __r)) => (__l, __v, __r),
+            _ => __symbol_type_mismatch()
         }
+    }
+    pub(crate) fn __reduce2<
+        'input,
+    >(
+        input: &'input str,
+        __lookahead_start: Option<&usize>,
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> (usize, usize)
+    {
+        // Expr = Factor => ActionFn(3);
+        let __sym0 = __pop_Variant1(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym0.2.clone();
+        let __nt = super::__action3::<>(input, __sym0);
+        __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+        (1, 0)
+    }
+    pub(crate) fn __reduce5<
+        'input,
+    >(
+        input: &'input str,
+        __lookahead_start: Option<&usize>,
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> (usize, usize)
+    {
+        // Factor = Term => ActionFn(6);
+        let __sym0 = __pop_Variant1(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym0.2.clone();
+        let __nt = super::__action6::<>(input, __sym0);
+        __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+        (1, 1)
+    }
+    pub(crate) fn __reduce7<
+        'input,
+    >(
+        input: &'input str,
+        __lookahead_start: Option<&usize>,
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> (usize, usize)
+    {
+        // Term = Num => ActionFn(7);
+        let __sym0 = __pop_Variant1(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym0.2.clone();
+        let __nt = super::__action7::<>(input, __sym0);
+        __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+        (1, 3)
+    }
+    pub(crate) fn __reduce8<
+        'input,
+    >(
+        input: &'input str,
+        __lookahead_start: Option<&usize>,
+        __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
+        _: core::marker::PhantomData<(&'input ())>,
+    ) -> (usize, usize)
+    {
+        // Term = "(", Expr, ")" => ActionFn(8);
+        assert!(__symbols.len() >= 3);
+        let __sym2 = __pop_Variant0(__symbols);
+        let __sym1 = __pop_Variant1(__symbols);
+        let __sym0 = __pop_Variant0(__symbols);
+        let __start = __sym0.0.clone();
+        let __end = __sym2.2.clone();
+        let __nt = super::__action8::<>(input, __sym0, __sym1, __sym2);
+        __symbols.push((__start, __Symbol::Variant1(__nt), __end));
+        (3, 3)
     }
 }
-
-mod tokenizer {
-
-    use nom::{
-        branch::alt,
-        bytes::complete::tag,
-        character::complete::{alpha1, alphanumeric1, char, multispace0, one_of},
-        combinator::recognize,
-        multi::{many0, many1},
-        sequence::{pair, terminated},
-        IResult,
-    };
-
-    pub fn decimal_literal(input: &str) -> IResult<&str, &str> {
-        recognize(many1(terminated(one_of("0123456789"), many0(char('_')))))(input)
-    }
-
-    pub fn identifier(input: &str) -> IResult<&str, &str> {
-        recognize(pair(
-            alt((alpha1, tag("_"))),
-            many0(alt((alphanumeric1, tag("_")))),
-        ))(input)
-    }
-
-    pub fn parenthesis(input: &str) -> IResult<&str, &str> {
-        recognize(one_of("()"))(input)
-    }
-
-    pub fn operator(input: &str) -> IResult<&str, &str> {
-        recognize(one_of("+-/*="))(input)
-    }
-
-    pub fn whitespace(input: &str) -> IResult<&str, &str> {
-        multispace0(input)
+pub use self::__parse__Expr::ExprParser;
+#[cfg_attr(rustfmt, rustfmt_skip)]
+mod __intern_token {
+    #![allow(unused_imports)]
+    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+    #[allow(unused_extern_crates)]
+    extern crate lalrpop_util as __lalrpop_util;
+    #[allow(unused_imports)]
+    use self::__lalrpop_util::state_machine as __state_machine;
+    extern crate core;
+    extern crate alloc;
+    pub fn new_builder() -> __lalrpop_util::lexer::MatcherBuilder {
+        let __strs: &[(&str, bool)] = &[
+            ("^([0-9]+)", false),
+            ("^(\\()", false),
+            ("^(\\))", false),
+            ("^(\\*)", false),
+            ("^(\\+)", false),
+            ("^(\\-)", false),
+            ("^(/)", false),
+            (r"^(\s*)", true),
+        ];
+        __lalrpop_util::lexer::MatcherBuilder::new(__strs.iter().copied()).unwrap()
     }
 }
+pub(crate) use self::__lalrpop_util::lexer::Token;
 
-#[cfg(test)]
-mod test {
-    use super::tokenizer;
-    use super::{Lexer, Operator, Token};
+#[allow(unused_variables)]
+fn __action0<
+    'input,
+>(
+    input: &'input str,
+    (_, __0, _): (usize, AST, usize),
+) -> AST
+{
+    __0
+}
 
-    #[test]
-    fn test_parse_decimal_literal() {
-        assert_eq!(tokenizer::decimal_literal("2 + 3"), Ok((" + 3", "2")));
-        assert_eq!(tokenizer::decimal_literal("2+ 3"), Ok(("+ 3", "2")));
-        assert_eq!(tokenizer::decimal_literal("2 +3"), Ok((" +3", "2")));
-        assert_eq!(tokenizer::decimal_literal("2+3"), Ok(("+3", "2")));
-        assert_eq!(tokenizer::decimal_literal("234 + 3"), Ok((" + 3", "234")));
+#[allow(unused_variables)]
+fn __action1<
+    'input,
+>(
+    input: &'input str,
+    (_, lhs, _): (usize, AST, usize),
+    (_, _, _): (usize, &'input str, usize),
+    (_, rhs, _): (usize, AST, usize),
+) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+{
+    parse_binary_expr(lhs, EBinaryOp::Add, rhs)
+}
 
-        // TODO: This would have nested errors? I don't want to bother with that
-        match tokenizer::decimal_literal("s+3") {
-            Err(_) => assert_eq!(1, 1), // This branch implies we've passed, this should indeed be an error
-            Ok(_) => assert_eq!(1, 0),  // This branch implies we've failed, this should not be Ok
-        }
+#[allow(unused_variables)]
+fn __action2<
+    'input,
+>(
+    input: &'input str,
+    (_, lhs, _): (usize, AST, usize),
+    (_, _, _): (usize, &'input str, usize),
+    (_, rhs, _): (usize, AST, usize),
+) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+{
+    parse_binary_expr(lhs, EBinaryOp::Sub, rhs)
+}
+
+#[allow(unused_variables)]
+fn __action3<
+    'input,
+>(
+    input: &'input str,
+    (_, __0, _): (usize, AST, usize),
+) -> AST
+{
+    __0
+}
+
+#[allow(unused_variables)]
+fn __action4<
+    'input,
+>(
+    input: &'input str,
+    (_, lhs, _): (usize, AST, usize),
+    (_, _, _): (usize, &'input str, usize),
+    (_, rhs, _): (usize, AST, usize),
+) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+{
+    parse_binary_expr(lhs, EBinaryOp::Mul, rhs)
+}
+
+#[allow(unused_variables)]
+fn __action5<
+    'input,
+>(
+    input: &'input str,
+    (_, lhs, _): (usize, AST, usize),
+    (_, _, _): (usize, &'input str, usize),
+    (_, rhs, _): (usize, AST, usize),
+) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+{
+    parse_binary_expr(lhs, EBinaryOp::Div, rhs)
+}
+
+#[allow(unused_variables)]
+fn __action6<
+    'input,
+>(
+    input: &'input str,
+    (_, __0, _): (usize, AST, usize),
+) -> AST
+{
+    __0
+}
+
+#[allow(unused_variables)]
+fn __action7<
+    'input,
+>(
+    input: &'input str,
+    (_, __0, _): (usize, AST, usize),
+) -> AST
+{
+    __0
+}
+
+#[allow(unused_variables)]
+fn __action8<
+    'input,
+>(
+    input: &'input str,
+    (_, _, _): (usize, &'input str, usize),
+    (_, __0, _): (usize, AST, usize),
+    (_, _, _): (usize, &'input str, usize),
+) -> AST
+{
+    __0
+}
+
+#[allow(unused_variables)]
+fn __action9<
+    'input,
+>(
+    input: &'input str,
+    (_, s, _): (usize, &'input str, usize),
+) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+{
+    parse_num_expr(s)
+}
+
+pub trait __ToTriple<'input, > {
+    fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>;
+}
+
+impl<'input, > __ToTriple<'input, > for (usize, Token<'input>, usize) {
+    fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>> {
+        Ok(value)
     }
-
-    #[test]
-    fn test_parse_identifier() {
-        assert_eq!(tokenizer::identifier("x + 2"), Ok((" + 2", "x")));
-        assert_eq!(tokenizer::identifier("x   +2"), Ok(("   +2", "x")));
-        assert_eq!(tokenizer::identifier("_d+2"), Ok(("+2", "_d")));
-
-        match tokenizer::identifier("$x - 2") {
-            Err(_) => assert_eq!(1, 1), // This branch implies we've passed, this should indeed be an error
-            Ok(_) => assert_eq!(1, 0),  // This branch implies we've failed, this should not be Ok
+}
+impl<'input, > __ToTriple<'input, > for Result<(usize, Token<'input>, usize), &'static str> {
+    fn to_triple(value: Self) -> Result<(usize,Token<'input>,usize), __lalrpop_util::ParseError<usize, Token<'input>, &'static str>> {
+        match value {
+            Ok(v) => Ok(v),
+            Err(error) => Err(__lalrpop_util::ParseError::User { error }),
         }
-    }
-
-    #[test]
-    fn test_numeric_expression() {
-        let mut lexer = Lexer::new("2 + 4");
-        assert_eq!(Some(Token::Number(2)), lexer.get_next_token());
-        assert_eq!(Some(Token::Operator(Operator::Add)), lexer.get_next_token());
-        assert_eq!(Some(Token::Number(4)), lexer.get_next_token());
     }
 }
