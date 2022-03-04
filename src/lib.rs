@@ -4,7 +4,7 @@ mod codegen;
 mod optimizer;
 mod parser;
 
-mod tree;
+mod graph;
 
 // NOTE: compile takes ownership of the program string.
 // The Lexer looks at views on this string only

@@ -1,4 +1,4 @@
-use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, ASTNode};
 grammar;
 
 // Grammar:
@@ -8,13 +8,13 @@ grammar;
 // <Term> -> ( <Expr> ) | <Num>
 // <Num> -> [0-9]+
 
-pub Expr: AST = {
+pub Expr: ASTNode = {
     <lhs:Expr> "+" <rhs:Factor> =>? parse_binary_expr(lhs, EBinaryOp::Add, rhs),
     <lhs:Expr> "-" <rhs:Factor> =>? parse_binary_expr(lhs, EBinaryOp::Sub, rhs),
     Factor,
 };
 
-Factor: AST = {
+Factor: ASTNode = {
     <lhs:Factor> "*" <rhs:Term> =>? parse_binary_expr(lhs, EBinaryOp::Mul, rhs),
     <lhs:Factor> "/" <rhs:Term> =>? parse_binary_expr(lhs, EBinaryOp::Div, rhs),
     Term,
@@ -22,5 +22,5 @@ Factor: AST = {
 
 Term = { Num, "(" <Expr> ")" };
 
-Num: AST = <s: r"[0-9]+"> =>? parse_num_expr(s); 
+Num: ASTNode = <s: r"[0-9]+"> =>? parse_num_expr(s); 
 

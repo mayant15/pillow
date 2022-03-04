@@ -21,4 +21,5 @@ lalrpop = "0.19.6"
 lalrpop-util = "0.19.6"
 regex = "1"
 lazy_static = "1.4.0"
+petgraph = "0.5.1"
 

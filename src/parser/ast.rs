@@ -1,15 +1,14 @@
 use super::lexer::ExprParser;
-use crate::tree::{TreeNode, TreeArena, create, attach_to, print_tree};
-use std::ops::{Deref, DerefMut};
-use std::sync::Mutex;
 use lazy_static::lazy_static;
+use crate::graph::{Tree, TreeNode, TreeEdge};
+use std::boxed::Box;
 use lalrpop_util::{
     ParseError,
     lexer::Token,
 };
 
-/// Node for an expression in the AST
-pub type AST = TreeNode;
+pub type ASTNode = TreeNode;
+pub type AST = Tree<ENodeData>;
 
 /// Binary operations in order of decreasing precedence
 #[derive(Debug)]
@@ -24,59 +23,39 @@ pub enum ENodeData {
     BinaryOp(EBinaryOp),
 }
 
-// This is the only way I know to create a global mutable object :(
 lazy_static! {
-    static ref ARENA: Mutex<TreeArena<ENodeData>> = Mutex::new(TreeArena::new());
+    static ref AST_DATA: AST = AST::new();
 }
 
-pub fn parse_binary_expr<'a, L, T>(lhs: AST, op: EBinaryOp, rhs: AST) -> Result<AST, ParseError<L, T, &'a str>> {
-    ARENA.lock()
-        .map_err(|_| ParseError::User {
-            error: "Failed acquire AST mutex to parse binary expression"
-        })
-    .and_then(|mut guard| {
-        let arena = guard.deref_mut();
-        create(arena, ENodeData::BinaryOp(op))
-            .and_then(|binop| {
-                attach_to(arena, binop, lhs)
-            })
-        .and_then(|binop| {
-            attach_to(arena, binop, rhs)
-        }).ok_or(ParseError::User {
-            error: "Failed to parse binary expression"
-        })
-    })
+fn add_node(data: ENodeData) -> TreeNode {
+    AST_DATA.add_node(data)
 }
 
-pub fn parse_num_expr<'a, L, T>(s: &str) -> Result<AST, ParseError<L, T, &'a str>> {
-    ARENA.lock()
-        .map_err(|_| ParseError::User {
-            error: "Failed to acquire AST mutex to parse number expression"
-        })
-    .and_then(|mut guard| {
-        let arena = guard.deref_mut();
-        i32::from_str_radix(s, 10)
+fn add_edge(from: TreeNode, to: TreeNode) -> TreeEdge {
+    AST_DATA.add_edge(from, to)
+}
+
+pub fn parse_binary_expr<'a, L, T>(lhs: ASTNode, op: EBinaryOp, rhs: ASTNode) -> Result<ASTNode, ParseError<L, T, &'a str>> {
+    let binop_node = add_node(ENodeData::BinaryOp(op));
+    add_edge(binop_node, lhs);
+    add_edge(binop_node, rhs);
+
+    // NOTE: Is this still valid if it is moved above?
+    return Ok(binop_node);
+}
+
+pub fn parse_num_expr<'a, L, T>(s: &str) -> Result<ASTNode, ParseError<L, T, &'a str>> {
+    i32::from_str_radix(s, 10)
             .map_err(|_| ParseError::User {
                 error: "Failed to parse numeric literal"
             })
-        .and_then(|num| {
-            create(arena, ENodeData::Number(num))
-                .ok_or(ParseError::User {
-                    error: "Failed to create new AST node for number"
-                })
-        })
-
+    .and_then(|num| {
+        Ok(add_node(ENodeData::Number(num)))
     })
 }
 
-pub fn parse<'a>(program: &'a str) -> Result<AST, ParseError<usize, Token<'a>, &'static str>> {
-    let ast = ExprParser::new().parse(program);
-
-    ARENA.lock().and_then(|guard|{
-        let arena = guard.deref();
-        print_tree(arena, &ast.clone().unwrap(), 2);
-        Ok(())
-    });
-
-    return ast;
+pub fn parse<'a>(program: &'a str) -> Result<ASTNode, ParseError<usize, Token<'a>, &'static str>> {
+    let root = ExprParser::new().parse(program);
+    return root;
 }
+

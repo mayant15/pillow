@@ -1,6 +1,6 @@
 // auto-generated: "lalrpop 0.19.6"
-// sha3: 7057cb666e9baee68e8ebcd2f32a6fe94f2a2896fc62bbd45d882ba4badaf
-use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+// sha3: 9145ed25319a89d1ed84c9c4f58514351ccb86b4fdf15237ee1d13a2e89a0f1
+use super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, ASTNode};
 #[allow(unused_extern_crates)]
 extern crate lalrpop_util as __lalrpop_util;
 #[allow(unused_imports)]
@@ -12,7 +12,7 @@ extern crate alloc;
 mod __parse__Expr {
     #![allow(non_snake_case, non_camel_case_types, unused_mut, unused_variables, unused_imports, unused_parens)]
 
-    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, ASTNode};
     #[allow(unused_extern_crates)]
     extern crate lalrpop_util as __lalrpop_util;
     #[allow(unused_imports)]
@@ -24,7 +24,7 @@ mod __parse__Expr {
     pub(crate) enum __Symbol<'input>
      {
         Variant0(&'input str),
-        Variant1(AST),
+        Variant1(ASTNode),
     }
     const __ACTION: &[i8] = &[
         // State 0
@@ -154,7 +154,7 @@ mod __parse__Expr {
         type Token = Token<'input>;
         type TokenIndex = usize;
         type Symbol = __Symbol<'input>;
-        type Success = AST;
+        type Success = ASTNode;
         type StateIndex = i8;
         type Action = i8;
         type ReduceIndex = i8;
@@ -291,7 +291,7 @@ mod __parse__Expr {
         >(
             &self,
             input: &'input str,
-        ) -> Result<AST, __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>
+        ) -> Result<ASTNode, __lalrpop_util::ParseError<usize, Token<'input>, &'static str>>
         {
             let mut __tokens = self.builder.matcher(input);
             __state_machine::Parser::drive(
@@ -312,7 +312,7 @@ mod __parse__Expr {
         __states: &mut alloc::vec::Vec<i8>,
         __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>,
         _: core::marker::PhantomData<(&'input ())>,
-    ) -> Option<Result<AST,__lalrpop_util::ParseError<usize, Token<'input>, &'static str>>>
+    ) -> Option<Result<ASTNode,__lalrpop_util::ParseError<usize, Token<'input>, &'static str>>>
     {
         let (__pop_states, __nonterminal) = match __action {
             0 => {
@@ -424,7 +424,7 @@ mod __parse__Expr {
       'input,
     >(
         __symbols: &mut alloc::vec::Vec<(usize,__Symbol<'input>,usize)>
-    ) -> (usize, AST, usize)
+    ) -> (usize, ASTNode, usize)
      {
         match __symbols.pop() {
             Some((__l, __Symbol::Variant1(__v), __r)) => (__l, __v, __r),
@@ -518,7 +518,7 @@ pub use self::__parse__Expr::ExprParser;
 #[cfg_attr(rustfmt, rustfmt_skip)]
 mod __intern_token {
     #![allow(unused_imports)]
-    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, AST};
+    use super::super::ast::{parse_binary_expr, parse_num_expr, EBinaryOp, ASTNode};
     #[allow(unused_extern_crates)]
     extern crate lalrpop_util as __lalrpop_util;
     #[allow(unused_imports)]
@@ -546,8 +546,8 @@ fn __action0<
     'input,
 >(
     input: &'input str,
-    (_, __0, _): (usize, AST, usize),
-) -> AST
+    (_, __0, _): (usize, ASTNode, usize),
+) -> ASTNode
 {
     __0
 }
@@ -557,10 +557,10 @@ fn __action1<
     'input,
 >(
     input: &'input str,
-    (_, lhs, _): (usize, AST, usize),
+    (_, lhs, _): (usize, ASTNode, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, rhs, _): (usize, AST, usize),
-) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+    (_, rhs, _): (usize, ASTNode, usize),
+) -> Result<ASTNode,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
 {
     parse_binary_expr(lhs, EBinaryOp::Add, rhs)
 }
@@ -570,10 +570,10 @@ fn __action2<
     'input,
 >(
     input: &'input str,
-    (_, lhs, _): (usize, AST, usize),
+    (_, lhs, _): (usize, ASTNode, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, rhs, _): (usize, AST, usize),
-) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+    (_, rhs, _): (usize, ASTNode, usize),
+) -> Result<ASTNode,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
 {
     parse_binary_expr(lhs, EBinaryOp::Sub, rhs)
 }
@@ -583,8 +583,8 @@ fn __action3<
     'input,
 >(
     input: &'input str,
-    (_, __0, _): (usize, AST, usize),
-) -> AST
+    (_, __0, _): (usize, ASTNode, usize),
+) -> ASTNode
 {
     __0
 }
@@ -594,10 +594,10 @@ fn __action4<
     'input,
 >(
     input: &'input str,
-    (_, lhs, _): (usize, AST, usize),
+    (_, lhs, _): (usize, ASTNode, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, rhs, _): (usize, AST, usize),
-) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+    (_, rhs, _): (usize, ASTNode, usize),
+) -> Result<ASTNode,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
 {
     parse_binary_expr(lhs, EBinaryOp::Mul, rhs)
 }
@@ -607,10 +607,10 @@ fn __action5<
     'input,
 >(
     input: &'input str,
-    (_, lhs, _): (usize, AST, usize),
+    (_, lhs, _): (usize, ASTNode, usize),
     (_, _, _): (usize, &'input str, usize),
-    (_, rhs, _): (usize, AST, usize),
-) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+    (_, rhs, _): (usize, ASTNode, usize),
+) -> Result<ASTNode,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
 {
     parse_binary_expr(lhs, EBinaryOp::Div, rhs)
 }
@@ -620,8 +620,8 @@ fn __action6<
     'input,
 >(
     input: &'input str,
-    (_, __0, _): (usize, AST, usize),
-) -> AST
+    (_, __0, _): (usize, ASTNode, usize),
+) -> ASTNode
 {
     __0
 }
@@ -631,8 +631,8 @@ fn __action7<
     'input,
 >(
     input: &'input str,
-    (_, __0, _): (usize, AST, usize),
-) -> AST
+    (_, __0, _): (usize, ASTNode, usize),
+) -> ASTNode
 {
     __0
 }
@@ -643,9 +643,9 @@ fn __action8<
 >(
     input: &'input str,
     (_, _, _): (usize, &'input str, usize),
-    (_, __0, _): (usize, AST, usize),
+    (_, __0, _): (usize, ASTNode, usize),
     (_, _, _): (usize, &'input str, usize),
-) -> AST
+) -> ASTNode
 {
     __0
 }
@@ -656,7 +656,7 @@ fn __action9<
 >(
     input: &'input str,
     (_, s, _): (usize, &'input str, usize),
-) -> Result<AST,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
+) -> Result<ASTNode,__lalrpop_util::ParseError<usize,Token<'input>,&'static str>>
 {
     parse_num_expr(s)
 }
