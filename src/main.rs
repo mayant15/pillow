@@ -1,12 +1,13 @@
 use std::io::{self, Write};
 
 #[inline]
-fn clean(input: &String) -> String {
-    input.trim().to_string()
+fn clean(input: &mut str) -> &str {
+    input.trim()
 }
 
-fn process_input(input: &String) {
+fn process_input(input: &mut str) {
     let cleaned = clean(input);
+    println!("cleaned input: {}", cleaned);
 
     // Close the program if exit() is entered, compile otherwise
     if cleaned.eq("exit()") {
@@ -38,7 +39,7 @@ fn main() {
         // Read the next line and take user input
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
-            Ok(_) => process_input(&input),
+            Ok(_) => process_input(input.as_mut_str()),
             Err(error) => eprintln!("ERROR: Failed to read input\nDETAILS: {}", error),
         }
     }

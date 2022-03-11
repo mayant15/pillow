@@ -8,7 +8,7 @@ mod tree;
 
 // NOTE: compile takes ownership of the program string.
 // The Lexer looks at views on this string only
-pub fn compile(program: String) -> Result<(), &'static str> {
+pub fn compile(program: &str) -> Result<(), &'static str> {
     let mut lexer = parser::Lexer::new(&program);
 
     let mut tokens: Vec<parser::Token> = Vec::new();
