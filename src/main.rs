@@ -1,5 +1,9 @@
 use std::io::{self, Write};
 
+fn abort() {
+    panic!("Exit the program...");
+}
+
 #[inline]
 fn clean(input: &mut str) -> &str {
     input.trim()
@@ -7,18 +11,12 @@ fn clean(input: &mut str) -> &str {
 
 fn process_input(input: &mut str) {
     let cleaned = clean(input);
-    println!("cleaned input: {}", cleaned);
 
     // Close the program if exit() is entered, compile otherwise
     if cleaned.eq("exit()") {
-        panic!("Exiting the program...");
-    } else {
-        match pillow::compile(cleaned) {
-            Err(error) => {
-                eprintln!("ERROR: Failed to compile input\nDETAILS: {}", error)
-            }
-            _ => (),
-        }
+        abort();
+    } else if let Err(error) = pillow::compile(cleaned) {
+        eprintln!("ERROR: Failed to compile input\nDETAILS: {}", error);
     }
 }
 
@@ -31,9 +29,9 @@ fn main() {
         print!(">>> ");
 
         // Flush all remaining print statements before asking for more user input
-        match io::stdout().flush() {
-            Err(error) => eprintln!("ERROR: Cannot flush stdout\nDETAILS: {}", error),
-            _ => (),
+        if let Err(error) = io::stdout().flush() {
+            eprintln!("ERROR: Cannot flush stdout\nDETAILS: {}", error);
+            abort();
         }
 
         // Read the next line and take user input
