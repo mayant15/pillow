@@ -44,8 +44,10 @@ fn repl() -> ! {
 }
 
 fn process_file(path: String) {
-    let contents = std::fs::read_to_string(path).unwrap_or_default();
-    println!("input file: {}", contents);
+    let mut contents = std::fs::read_to_string(path).unwrap_or_default();
+    println!("{}", contents);
+    println!("------------");
+    process_input(contents.as_mut_str());
 }
 
 fn main() {
