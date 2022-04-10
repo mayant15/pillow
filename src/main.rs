@@ -20,7 +20,7 @@ fn process_input(input: &mut str) {
     }
 }
 
-fn main() {
+fn repl() -> ! {
     println!("Pillow REPL, 2021, v0.1.0");
     println!("THIS IS A WORK IN PROGRESS");
     println!("Enter 'exit()' to exit");
@@ -40,5 +40,21 @@ fn main() {
             Ok(_) => process_input(input.as_mut_str()),
             Err(error) => eprintln!("ERROR: Failed to read input\nDETAILS: {}", error),
         }
+    }
+}
+
+fn process_file(path: String) {
+    let contents = std::fs::read_to_string(path).unwrap_or_default();
+    println!("input file: {}", contents);
+}
+
+fn main() {
+    let mut args = std::env::args();
+    if args.len() > 1 {
+        // File provided, don't run the repl
+        process_file(args.nth(1).unwrap());
+    } else {
+        // No args, run the REPL
+        repl();
     }
 }
