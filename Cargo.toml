@@ -17,4 +17,4 @@ name = "pillow"
 path = "src/main.rs"
 
 [dependencies]
-nom = "6"
+nom = "7.1.1"
