@@ -3,9 +3,8 @@
 
 Pillow is a project to learn about compilers. It is a simple language and a compiler frontend that generates LLVM IR. Still very much a work in progress.
 
-## Ideas
-
-- [inkwell](https://thedan64.github.io/inkwell/inkwell/index.html) for LLVM bindings
+## Dependencies
+- An LLVM 10.0 installation, pointed to by `LLVM_SYS_100_PREFIX`, required by the `llvm-sys` crate. [More info](https://crates.io/crates/llvm-sys).
 
 ## References
 
